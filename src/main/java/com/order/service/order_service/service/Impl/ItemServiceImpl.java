@@ -1,0 +1,69 @@
+package com.order.service.order_service.service.Impl;
+
+import com.order.service.order_service.mapper.ItemMapper;
+import com.order.service.order_service.model.dto.ItemDto;
+import com.order.service.order_service.model.entity.Item;
+import com.order.service.order_service.model.request.ItemRequest;
+import com.order.service.order_service.repository.ItemRepository;
+import com.order.service.order_service.service.ItemService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class ItemServiceImpl implements ItemService {
+
+    private final ItemRepository itemRepository;
+    private final ItemMapper itemMapper;
+
+    @Override
+    public ItemDto getItemById(Integer id) {
+        return itemRepository.findItemById(id)
+                .map(itemMapper::toItemDto)
+                .orElseThrow(() -> new RuntimeException("Item with ID: " + id + " was not found"));
+    }
+
+    @Override
+    @Transactional
+    public ItemDto saveItem(ItemRequest itemRequest) {
+        if (itemRepository.findByName(itemRequest.getName()).isPresent())
+            throw new RuntimeException("Item with name: " + itemRequest.getName() + " already exists");
+
+        return itemMapper.toItemDto(itemRepository.save(itemMapper.createItem(itemRequest)));
+    }
+
+    @Override
+    public List<ItemDto> getAllItems() {
+        return itemRepository.findAll()
+                .stream()
+                .map(itemMapper::toItemDto)
+                .toList();
+    }
+
+    @Override
+    @Transactional
+    public ItemDto updateItem(Integer id, ItemRequest itemRequest) {
+        Item item = itemRepository.findItemById(id)
+                .orElseThrow(() -> new RuntimeException("Item with ID: " + id + " already exists"));
+
+        if (!item.getName().equals(itemRequest.getName()) && itemRepository.findByName(itemRequest.getName()).isPresent())
+            throw new RuntimeException("Item with name: " + itemRequest.getName() + " already exists");
+
+        itemMapper.updateItem(itemRequest, item);
+        Item updatedItem = itemRepository.save(item);
+
+        return itemMapper.toItemDto(updatedItem);
+    }
+
+    @Override
+    @Transactional
+    public void deleteItem(Integer id) {
+        if (itemRepository.findItemById(id).isEmpty())
+            throw new RuntimeException("Item with ID: " + id + " was not found");
+
+        itemRepository.deleteById(id);
+    }
+}
