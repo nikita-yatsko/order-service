@@ -26,6 +26,6 @@ public class OrderUserClient {
     }
 
     public UserInfo fallback(String email, Throwable ex) {
-        return new UserInfo();
+        return new UserInfo("Unknow", "Unknow", null, email);
     }
 }
