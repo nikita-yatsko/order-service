@@ -1,6 +1,6 @@
 package com.order.service.order_service.model.response;
 
-import com.order.service.order_service.model.dto.OrderInfo;
+import com.order.service.order_service.model.dto.OrderDto;
 import lombok.Data;
 
 @Data
@@ -10,5 +10,5 @@ public class OrderResponse {
     private String surname;
     private String email;
 
-    private OrderInfo orderInfo;
+    private OrderDto orderDto;
 }

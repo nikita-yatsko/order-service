@@ -1,6 +1,6 @@
 package com.order.service.order_service.mapper;
 
-import com.order.service.order_service.model.dto.OrderInfo;
+import com.order.service.order_service.model.dto.OrderDto;
 import com.order.service.order_service.model.dto.UserInfo;
 import com.order.service.order_service.model.response.OrderResponse;
 import org.mapstruct.Mapper;
@@ -12,5 +12,5 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 )
 public interface OrderResponseMapper {
 
-    OrderResponse toOrderResponse(UserInfo order, OrderInfo orderInfo);
+    OrderResponse toOrderResponse(UserInfo order, OrderDto orderDto);
 }

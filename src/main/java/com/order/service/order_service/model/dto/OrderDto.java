@@ -27,6 +27,7 @@ public class OrderDto {
     @Valid
     private List<OrderItemDto> items;
 
+    private final Boolean deleted;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }
