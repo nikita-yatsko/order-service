@@ -12,7 +12,7 @@ public class OrderUserClient {
     private final WebClient webClient;
 
     public OrderUserClient(WebClient.Builder builder,
-                           @Value("${auth.service.url}") String baseUrl) {
+                           @Value("${user.service.url}") String baseUrl) {
         this.webClient = builder.baseUrl(baseUrl).build();
     }
 

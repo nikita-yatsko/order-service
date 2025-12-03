@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -47,14 +48,14 @@ public class OrderController {
 
     @PostMapping("/create")
     public ResponseEntity<OrderResponse> createOrder(@RequestBody @Valid OrderRequest orderRequest) {
-        return ResponseEntity.ok(orderService.createOrder(orderRequest));
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.createOrder(orderRequest));
     }
 
     @PostMapping("/update/{id}")
-    public ResponseEntity<OrderResponse> createOrder(
+    public ResponseEntity<OrderResponse> updateOrder(
             @PathVariable("id") Integer id,
             @RequestBody @Valid OrderRequest orderRequest) {
-        return ResponseEntity.ok(orderService.updateOrderById(id, orderRequest));
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.updateOrderById(id, orderRequest));
     }
 
     @DeleteMapping("/delete/{id}")

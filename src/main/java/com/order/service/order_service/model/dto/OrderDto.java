@@ -9,7 +9,6 @@ import lombok.Data;
 import java.time.LocalDateTime;
 import java.util.List;
 
-
 @Data
 public class OrderDto {
 
@@ -27,7 +26,7 @@ public class OrderDto {
     @Valid
     private List<OrderItemDto> items;
 
-    private final Boolean deleted;
+    private Boolean deleted;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }
