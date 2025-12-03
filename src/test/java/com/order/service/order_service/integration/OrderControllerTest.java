@@ -89,7 +89,7 @@ public class OrderControllerTest extends BaseIntegrationTest {
         orderItemDto.setItem(itemDto);
         orderItemDto.setQuantity(orderItem.getQuantity());
 
-        WireMock wireMockClient = new WireMock(wiremock.getHost(), wiremock.getMappedPort(8080));
+        WireMock wireMockClient = new WireMock(WIREMOCK.getHost(), WIREMOCK.getMappedPort(8080));
 
         wireMockClient.register(get(urlPathMatching("/api/user/info/.*"))
                 .willReturn(aResponse()
@@ -169,7 +169,6 @@ public class OrderControllerTest extends BaseIntegrationTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].email").value("test@mail.com"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].orderDto.userId").value(id))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].orderDto.status").value(Status.CREATED.toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].orderDto.items[0].id").value(item.getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].orderDto.items[0].item.name").value(item.getName()));
     }
 

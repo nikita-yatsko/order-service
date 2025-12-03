@@ -5,43 +5,40 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.time.Duration;
 
 @Testcontainers
 public class BaseIntegrationTest {
 
-    @Container
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16")
+    private static final PostgreSQLContainer<?> POSTGRES = new PostgreSQLContainer<>("postgres:16")
             .withDatabaseName("test")
             .withUsername("test")
             .withPassword("test")
-            .withInitScript("init.sql")
-            .withStartupTimeout(Duration.ofMinutes(2))
-            .waitingFor(Wait.forListeningPort());
+            .withInitScript("init.sql");
 
-    @Container
-    static GenericContainer<?> wiremock = new GenericContainer<>("wiremock/wiremock:latest")
-            .withExposedPorts(8080)
-            .waitingFor(Wait.forHttp("/__admin/health").forStatusCode(200));
-
-
-    @Container
-    static GenericContainer<?> redis = new GenericContainer<>("redis:7")
+    private static final GenericContainer<?> REDIS = new GenericContainer<>("redis:7")
             .withExposedPorts(6379)
             .waitingFor(Wait.forListeningPort());
 
+    protected static final GenericContainer<?> WIREMOCK = new GenericContainer<>("wiremock/wiremock:latest")
+            .withExposedPorts(8080)
+            .waitingFor(Wait.forHttp("/__admin/health").forStatusCode(200));
+
+    static {
+        POSTGRES.start();
+        REDIS.start();
+        WIREMOCK.start();
+    }
+
     @DynamicPropertySource
     static void configureProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", postgres::getJdbcUrl);
-        registry.add("spring.datasource.username", postgres::getUsername);
-        registry.add("spring.datasource.password", postgres::getPassword);
+        registry.add("spring.datasource.url", POSTGRES::getJdbcUrl);
+        registry.add("spring.datasource.username", POSTGRES::getUsername);
+        registry.add("spring.datasource.password", POSTGRES::getPassword);
 
-        registry.add("spring.data.redis.host", redis::getHost);
-        registry.add("spring.data.redis.port", () -> redis.getMappedPort(6379));
-        registry.add("user.service.url",
-                () -> "http://" + wiremock.getHost() + ":" + wiremock.getMappedPort(8080));
+        registry.add("spring.data.redis.host", REDIS::getHost);
+        registry.add("spring.data.redis.port", REDIS::getFirstMappedPort);
+        registry.add("user.service.url", () -> "http://" + WIREMOCK.getHost() + ":" + WIREMOCK.getMappedPort(8080));
     }
 }
