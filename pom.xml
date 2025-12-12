@@ -59,6 +59,12 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!--Security-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
 		<!-- Resilience4j (Circuit Breaker + Retry) -->
 		<dependency>
 			<groupId>io.github.resilience4j</groupId>
