@@ -2,6 +2,7 @@ package com.order.service.order_service.advice;
 
 import com.order.service.order_service.model.exception.DataExistException;
 import com.order.service.order_service.model.exception.NotFoundException;
+import com.order.service.order_service.model.exception.PaymentFailedException;
 import com.order.service.order_service.model.response.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -90,6 +91,13 @@ public class CommonControllerAdvice {
         log.error(e.getMessage());
 
         return buildErrorResponse(e, HttpStatus.FORBIDDEN, request);
+    }
+
+    @ExceptionHandler(PaymentFailedException.class)
+    public ResponseEntity<ErrorResponse> handlePaymentFailedException(PaymentFailedException e, HttpServletRequest request) {
+        log.error(e.getMessage());
+
+        return buildErrorResponse(e, HttpStatus.BAD_REQUEST, request);
     }
 
     private Throwable unwrap(Throwable e) {

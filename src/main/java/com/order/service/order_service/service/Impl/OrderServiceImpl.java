@@ -6,6 +6,7 @@ import com.order.service.order_service.model.constants.ErrorMessage;
 import com.order.service.order_service.model.dto.UserInfo;
 import com.order.service.order_service.model.entity.Order;
 import com.order.service.order_service.model.entity.OrderItem;
+import com.order.service.order_service.model.enums.Status;
 import com.order.service.order_service.model.exception.InvalidDataException;
 import com.order.service.order_service.model.exception.NotFoundException;
 import com.order.service.order_service.model.request.OrderRequest;
@@ -15,6 +16,7 @@ import com.order.service.order_service.service.OrderService;
 import com.order.service.order_service.service.UserCacheService;
 import com.order.service.order_service.utils.specifications.OrderSpecification;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -24,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
@@ -33,7 +36,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderResponseMapper orderResponseMapper;
     private final UserCacheService userCacheService;
 
-    private final static String EMAIL = "admin@example.com"; //TODO idk how to implement it (where will we get email?)
+    private final static String EMAIL = "admin@example.com";
 
     @Override
     @Transactional
@@ -96,6 +99,34 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.findOrderById(orderId)
                 .map(od -> od.getUserId().equals(userId))
                 .orElse(false);
+    }
+
+    @Override
+    @Transactional
+    public OrderResponse setPaidStatus(Integer orderId, Integer userId, String statusRequest) {
+       if (statusRequest.isBlank() || !statusRequest.equals("SUCCESS")) {
+           log.info("Status request is invalid");
+           return null;
+       }
+
+       Order order = orderRepository.findOrderById(orderId)
+               .orElseGet(() -> {
+                   log.info("Order not found");
+                   return null;
+               });
+
+       if (!isOwner(orderId, userId)) {
+           log.info(ErrorMessage.PAYMENT_FAILED.getMessage());
+           return null;
+       }
+
+        order.setStatus(Status.PAID);
+        Order changedOrder = orderRepository.save(order);
+
+        return orderResponseMapper.toOrderResponse(
+                userCacheService.getUserInfo(EMAIL),
+                orderMapper.toOrderDto(changedOrder)
+        );
     }
 
     @Override

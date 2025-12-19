@@ -13,6 +13,8 @@ public enum ErrorMessage {
 
     ORDER_NOT_FOUND_BY_ID("Order with ID: %s was not found"),
     INVALID_ORDER_ID_OR_USER_ID("Invalid order ID: %s or user ID: %s"),
+
+    PAYMENT_FAILED("Order belongs to something else"),
     ;
 
     private final String message;
