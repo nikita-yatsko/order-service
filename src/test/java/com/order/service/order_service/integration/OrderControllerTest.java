@@ -103,7 +103,7 @@ public class OrderControllerTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void getOrderById_200_ok() throws Exception {
+    public void getOrderByIdReturn200Ok() throws Exception {
         // Given:
         Integer id = order.getId();
 
@@ -124,7 +124,7 @@ public class OrderControllerTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void getOrderById_404_notFound() throws Exception {
+    public void getOrderByIdReturn404NotFound() throws Exception {
         // Given:
         Integer id = 999;
 
@@ -138,7 +138,7 @@ public class OrderControllerTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void getAllOrders_200_ok() throws Exception {
+    public void getAllOrdersReturn200Ok() throws Exception {
         // When:
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders
                 .get("/api/order/all")
@@ -150,7 +150,7 @@ public class OrderControllerTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void getOrderByUserId_200_ok() throws Exception {
+    public void getOrderByUserIdReturn200Ok() throws Exception {
         // Given:
         Integer id = order.getUserId();
 
@@ -170,7 +170,7 @@ public class OrderControllerTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void createOrder_201_created() throws Exception {
+    public void createOrderReturn201Created() throws Exception {
         // Given:
         ItemDto itemDto = new ItemDto();
         itemDto.setId(item.getId());
@@ -205,7 +205,7 @@ public class OrderControllerTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void deleteOrder_204_noContent() throws Exception {
+    public void deleteOrderReturn204NoContent() throws Exception {
         // Given:
         Integer id = order.getId();
 
@@ -219,7 +219,7 @@ public class OrderControllerTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void deleteOrder_404_notFound() throws Exception {
+    public void deleteOrderReturn404NotFound() throws Exception {
         // Given:
         Integer id = 999;
 
