@@ -9,11 +9,14 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Integer>, JpaSpecificationExecutor<Order> {
 
-    Order findOrderByIdAndDeletedFalse(Integer id);
+    Optional<Order> findOrderByIdAndDeletedFalse(Integer id);
+
+    Optional<Order> findOrderById(Integer id);
 
     List<Order> findOrdersByUserIdAndDeletedFalse(Integer userId);
 

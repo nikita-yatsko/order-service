@@ -19,6 +19,7 @@ public class Order extends BaseEntity {
     @Column(name = "user_id")
     private Integer userId;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Status status;
 
