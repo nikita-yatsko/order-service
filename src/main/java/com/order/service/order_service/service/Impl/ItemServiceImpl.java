@@ -1,6 +1,9 @@
 package com.order.service.order_service.service.Impl;
 
 import com.order.service.order_service.mapper.ItemMapper;
+import com.order.service.order_service.model.exception.DataExistException;
+import com.order.service.order_service.model.exception.NotFoundException;
+import com.order.service.order_service.model.constants.ErrorMessage;
 import com.order.service.order_service.model.dto.ItemDto;
 import com.order.service.order_service.model.entity.Item;
 import com.order.service.order_service.model.request.ItemRequest;
@@ -24,14 +27,14 @@ public class ItemServiceImpl implements ItemService {
     public ItemDto getItemById(Integer id) {
         return itemRepository.findItemById(id)
                 .map(itemMapper::toItemDto)
-                .orElseThrow(() -> new RuntimeException("Item with ID: " + id + " was not found"));
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.ITEM_NOT_FOUND_BY_ID.getMessage(id)));
     }
 
     @Override
     @Transactional
     public ItemDto saveItem(ItemRequest itemRequest) {
         if (itemRepository.findByName(itemRequest.getName()).isPresent())
-            throw new RuntimeException("Item with name: " + itemRequest.getName() + " already exists");
+            throw new DataExistException(ErrorMessage.ITEM_ALREADY_EXISTS.getMessage(itemRequest.getName()));
 
         return itemMapper.toItemDto(itemRepository.save(itemMapper.createItem(itemRequest)));
     }
@@ -48,10 +51,10 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     public ItemDto updateItem(Integer id, ItemRequest itemRequest) {
         Item item = itemRepository.findItemById(id)
-                .orElseThrow(() -> new RuntimeException("Item with ID: " + id + " already exists"));
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.ITEM_NOT_FOUND_BY_ID.getMessage(id)));
 
         if (!item.getName().equals(itemRequest.getName()) && itemRepository.findByName(itemRequest.getName()).isPresent())
-            throw new RuntimeException("Item with name: " + itemRequest.getName() + " already exists");
+            throw new DataExistException(ErrorMessage.ITEM_ALREADY_EXISTS.getMessage(itemRequest.getName()));
 
         itemMapper.updateItem(itemRequest, item);
         Item updatedItem = itemRepository.save(item);
@@ -63,7 +66,7 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     public void deleteItem(Integer id) {
         if (itemRepository.findItemById(id).isEmpty())
-            throw new RuntimeException("Item with ID: " + id + " was not found");
+            throw new NotFoundException(ErrorMessage.ITEM_NOT_FOUND_BY_ID.getMessage(id));
 
         itemRepository.deleteById(id);
     }
