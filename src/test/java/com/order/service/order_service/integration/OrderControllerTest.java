@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -103,6 +104,7 @@ public class OrderControllerTest extends BaseIntegrationTest {
     }
 
     @Test
+    @WithMockUser(username = "test", roles = {"ADMIN"})
     public void getOrderByIdReturn200Ok() throws Exception {
         // Given:
         Integer id = order.getId();
@@ -110,9 +112,6 @@ public class OrderControllerTest extends BaseIntegrationTest {
         // When:
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders
                 .get("/api/order/{id}", id)
-                .header("X-Is-Valid", "true")
-                .header("X-User-Id", "1")
-                .header("X-Role", "ADMIN")
                 .accept(MediaType.APPLICATION_JSON));
 
         // Then:
@@ -127,6 +126,7 @@ public class OrderControllerTest extends BaseIntegrationTest {
     }
 
     @Test
+    @WithMockUser(username = "test", roles = {"ADMIN"})
     public void getOrderByIdReturn404NotFound() throws Exception {
         // Given:
         Integer id = 999;
@@ -134,9 +134,6 @@ public class OrderControllerTest extends BaseIntegrationTest {
         // When:
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders
                 .get("/api/order/{id}", id)
-                .header("X-Is-Valid", "true")
-                .header("X-User-Id", "1")
-                .header("X-Role", "ADMIN")
                 .accept(MediaType.APPLICATION_JSON));
 
         // Then:
@@ -144,13 +141,11 @@ public class OrderControllerTest extends BaseIntegrationTest {
     }
 
     @Test
+    @WithMockUser(username = "test", roles = {"ADMIN"})
     public void getAllOrdersReturn200Ok() throws Exception {
         // When:
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders
                 .get("/api/order/all")
-                .header("X-Is-Valid", "true")
-                .header("X-User-Id", "1")
-                .header("X-Role", "ADMIN")
                 .accept(MediaType.APPLICATION_JSON));
 
         // Then:
@@ -159,6 +154,7 @@ public class OrderControllerTest extends BaseIntegrationTest {
     }
 
     @Test
+    @WithMockUser(username = "test", roles = {"ADMIN"})
     public void getOrderByUserIdReturn200Ok() throws Exception {
         // Given:
         Integer id = order.getUserId();
@@ -166,9 +162,6 @@ public class OrderControllerTest extends BaseIntegrationTest {
         // When:
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders
                 .get("/api/order/user/{id}", id)
-                .header("X-Is-Valid", "true")
-                .header("X-User-Id", "1")
-                .header("X-Role", "ADMIN")
                 .accept(MediaType.APPLICATION_JSON));
 
         // Then:
@@ -182,6 +175,7 @@ public class OrderControllerTest extends BaseIntegrationTest {
     }
 
     @Test
+    @WithMockUser(username = "test", roles = {"ADMIN"})
     public void createOrderReturn201Created() throws Exception {
         // Given:
         ItemDto itemDto = new ItemDto();
@@ -202,9 +196,6 @@ public class OrderControllerTest extends BaseIntegrationTest {
         // When:
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders
                 .post("/api/order/create")
-                .header("X-Is-Valid", "true")
-                .header("X-User-Id", "1")
-                .header("X-Role", "ADMIN")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(orderRequest)));
@@ -220,16 +211,14 @@ public class OrderControllerTest extends BaseIntegrationTest {
     }
 
     @Test
+    @WithMockUser(username = "test", roles = {"ADMIN"})
     public void deleteOrderReturn204NoContent() throws Exception {
         // Given:
         Integer id = order.getId();
 
         // When:
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders
-                .delete("/api/order/delete/{id}", id)
-                .header("X-Is-Valid", "true")
-                .header("X-User-Id", "1")
-                .header("X-Role", "ADMIN"));
+                .delete("/api/order/delete/{id}", id));
 
         // Then:
         result.andExpect(MockMvcResultMatchers.status().isNoContent());
@@ -237,16 +226,14 @@ public class OrderControllerTest extends BaseIntegrationTest {
     }
 
     @Test
+    @WithMockUser(username = "test", roles = {"ADMIN"})
     public void deleteOrderReturn404NotFound() throws Exception {
         // Given:
         Integer id = 999;
 
         // When:
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders
-                .delete("/api/order/delete/{id}", id)
-                .header("X-Is-Valid", "true")
-                .header("X-User-Id", "1")
-                .header("X-Role", "ADMIN"));
+                .delete("/api/order/delete/{id}", id));
 
         // Then:
         result.andExpect(MockMvcResultMatchers.status().isNotFound());

@@ -223,6 +223,7 @@ public class ItemControllerTest extends BaseIntegrationTest{
     }
 
     @Test
+    @WithMockUser(username = "test", roles = {"ADMIN"})
     public void deleteItemReturn404NotFound() throws Exception {
         // Given:
         Integer id = 999;
