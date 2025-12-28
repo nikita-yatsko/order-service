@@ -55,7 +55,7 @@ public class OrderController {
     public ResponseEntity<OrderResponse> updateOrder(
             @PathVariable("id") Integer id,
             @RequestBody @Valid OrderRequest orderRequest) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.updateOrderById(id, orderRequest));
+        return ResponseEntity.ok(orderService.updateOrderById(id, orderRequest));
     }
 
     @DeleteMapping("/delete/{id}")
