@@ -26,8 +26,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
-
 
 @ActiveProfiles("test")
 @SpringBootTest(classes = OrderServiceApplication.class)
@@ -89,20 +87,19 @@ public class OrderControllerTest extends BaseIntegrationTest {
         orderItemDto.setItem(itemDto);
         orderItemDto.setQuantity(orderItem.getQuantity());
 
-        WireMock wireMockClient = new WireMock(WIREMOCK.getHost(), WIREMOCK.getMappedPort(8080));
-
-        wireMockClient.register(get(urlPathMatching("/api/user/info/.*"))
-                .willReturn(aResponse()
+        WireMock.configureFor(WIREMOCK.getHost(), WIREMOCK.getMappedPort(8080));
+        WireMock.stubFor(WireMock.get(WireMock.urlPathMatching("/api/user/info/.*"))
+                .willReturn(WireMock.aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
                         .withBody("""
-                {
-                  "name": "John",
-                  "surname": "Doe",
-                  "birthDate": null,
-                  "email": "test@mail.com"
-                }
-                """)));
+                            {
+                              "name": "John",
+                              "surname": "Doe",
+                              "birthDate": null,
+                              "email": "test@mail.com"
+                            }
+                            """)));
     }
 
     @Test
