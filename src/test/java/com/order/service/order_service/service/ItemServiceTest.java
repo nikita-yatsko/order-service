@@ -55,7 +55,7 @@ public class ItemServiceTest {
     }
 
     @Test
-    public void getItemById_success() {
+    public void getItemByIdSuccess() {
         // Arrange:
         when(itemRepository.findItemById(1)).thenReturn(Optional.of(item));
         when(itemMapper.toItemDto(item)).thenReturn(itemDto);
@@ -75,7 +75,7 @@ public class ItemServiceTest {
     }
 
     @Test
-    public void getItemById_throwError_notFound() {
+    public void getItemByIdThrowErrorNotFound() {
         // Arrange:
         when(itemRepository.findItemById(1)).thenReturn(Optional.empty());
 
@@ -91,7 +91,7 @@ public class ItemServiceTest {
     }
 
     @Test
-    public void saveItem_success() {
+    public void saveItemSuccess() {
         // Arrange
         ItemRequest itemRequest = new ItemRequest();
         itemRequest.setName("test");
@@ -126,7 +126,7 @@ public class ItemServiceTest {
     }
 
     @Test
-    public void saveItem_throwError_dataExistException() {
+    public void saveItemThrowErrorDataExistException() {
         // Arrange:
         ItemRequest request = new ItemRequest();
         request.setName("test");
@@ -146,7 +146,7 @@ public class ItemServiceTest {
     }
 
     @Test
-    public void getAllItems_success() {
+    public void getAllItemsSuccess() {
         // Arrange:
         when(itemRepository.findAll()).thenReturn(Collections.singletonList(item));
         when(itemMapper.toItemDto(item)).thenReturn(itemDto);
@@ -166,7 +166,7 @@ public class ItemServiceTest {
     }
 
     @Test
-    public void updateItem_success() {
+    public void updateItemSuccess() {
         // Arrange:
         Integer id = 1;
 
@@ -209,7 +209,7 @@ public class ItemServiceTest {
     }
 
     @Test
-    public void updateItem_throwError_notFoundException() {
+    public void updateItemThrowErrorNotFoundException() {
         // Arrange:
         Integer id = 1;
 
@@ -231,7 +231,7 @@ public class ItemServiceTest {
     }
 
     @Test
-    public void updateItem_throwError_dataExistException() {
+    public void updateItemThrowErrorDataExistException() {
         // Arrange:
         Integer id = 1;
 
@@ -260,7 +260,7 @@ public class ItemServiceTest {
     }
 
     @Test
-    public void deleteItem_success() {
+    public void deleteItemSuccess() {
         // Arrange:
         when(itemRepository.findItemById(1)).thenReturn(Optional.of(item));
         doNothing().when(itemRepository).deleteById(1);
@@ -274,7 +274,7 @@ public class ItemServiceTest {
     }
 
     @Test
-    public void deleteItem_throwError_notFoundException() {
+    public void deleteItemThrowErrorNotFoundException() {
         // Arrange:
         when(itemRepository.findItemById(1)).thenReturn(Optional.empty());
 
