@@ -13,11 +13,16 @@ import com.order.service.order_service.model.enums.Status;
 import com.order.service.order_service.model.request.OrderRequest;
 import com.order.service.order_service.repository.ItemRepository;
 import com.order.service.order_service.repository.OrderRepository;
+import com.order.service.order_service.security.model.CustomUserDetails;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -25,6 +30,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
+
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.authentication;
 
 
 @ActiveProfiles("test")
@@ -107,9 +114,18 @@ public class OrderControllerTest extends BaseIntegrationTest {
         // Given:
         Integer id = order.getId();
 
+        CustomUserDetails principal = new CustomUserDetails(1L, "ADMIN");
+        Authentication auth = new UsernamePasswordAuthenticationToken(
+                principal,
+                null,
+                List.of(new SimpleGrantedAuthority("ROLE_ADMIN"))
+        );
+
+
         // When:
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders
                 .get("/api/order/{id}", id)
+                .with(authentication(auth))
                 .accept(MediaType.APPLICATION_JSON));
 
         // Then:
@@ -127,10 +143,17 @@ public class OrderControllerTest extends BaseIntegrationTest {
     public void getOrderByIdReturn404NotFound() throws Exception {
         // Given:
         Integer id = 999;
+        CustomUserDetails principal = new CustomUserDetails(1L, "ADMIN");
+        Authentication auth = new UsernamePasswordAuthenticationToken(
+                principal,
+                null,
+                List.of(new SimpleGrantedAuthority("ROLE_ADMIN"))
+        );
 
         // When:
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders
                 .get("/api/order/{id}", id)
+                .with(authentication(auth))
                 .accept(MediaType.APPLICATION_JSON));
 
         // Then:
@@ -138,6 +161,7 @@ public class OrderControllerTest extends BaseIntegrationTest {
     }
 
     @Test
+    @WithMockUser(username = "test", roles = {"ADMIN"})
     public void getAllOrdersReturn200Ok() throws Exception {
         // When:
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders
@@ -154,9 +178,17 @@ public class OrderControllerTest extends BaseIntegrationTest {
         // Given:
         Integer id = order.getUserId();
 
+        CustomUserDetails principal = new CustomUserDetails(1L, "ADMIN");
+        Authentication auth = new UsernamePasswordAuthenticationToken(
+                principal,
+                null,
+                List.of(new SimpleGrantedAuthority("ROLE_ADMIN"))
+        );
+
         // When:
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders
                 .get("/api/order/user/{id}", id)
+                .with(authentication(auth))
                 .accept(MediaType.APPLICATION_JSON));
 
         // Then:
@@ -170,6 +202,7 @@ public class OrderControllerTest extends BaseIntegrationTest {
     }
 
     @Test
+    @WithMockUser(username = "test", roles = {"ADMIN"})
     public void createOrderReturn201Created() throws Exception {
         // Given:
         ItemDto itemDto = new ItemDto();
@@ -182,7 +215,7 @@ public class OrderControllerTest extends BaseIntegrationTest {
         requestItemDto.setQuantity(2);
 
         OrderRequest orderRequest = new OrderRequest();
-        orderRequest.setUserId(1); // новый заказ для теста
+        orderRequest.setUserId(1);
         orderRequest.setStatus(Status.CREATED);
         orderRequest.setItems(List.of(requestItemDto));
         orderRequest.setTotalPrice(item.getPrice() * orderItemDto.getQuantity());
@@ -209,9 +242,18 @@ public class OrderControllerTest extends BaseIntegrationTest {
         // Given:
         Integer id = order.getId();
 
+        CustomUserDetails principal = new CustomUserDetails(1L, "ADMIN");
+        Authentication auth = new UsernamePasswordAuthenticationToken(
+                principal,
+                null,
+                List.of(new SimpleGrantedAuthority("ROLE_ADMIN"))
+        );
+
+
         // When:
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders
-                .delete("/api/order/delete/{id}", id));
+                .delete("/api/order/delete/{id}", id)
+                .with(authentication(auth)));
 
         // Then:
         result.andExpect(MockMvcResultMatchers.status().isNoContent());
@@ -223,9 +265,17 @@ public class OrderControllerTest extends BaseIntegrationTest {
         // Given:
         Integer id = 999;
 
+        CustomUserDetails principal = new CustomUserDetails(1L, "ADMIN");
+        Authentication auth = new UsernamePasswordAuthenticationToken(
+                principal,
+                null,
+                List.of(new SimpleGrantedAuthority("ROLE_ADMIN"))
+        );
+
         // When:
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders
-                .delete("/api/order/delete/{id}", id));
+                .delete("/api/order/delete/{id}", id)
+                .with(authentication(auth)));
 
         // Then:
         result.andExpect(MockMvcResultMatchers.status().isNotFound());

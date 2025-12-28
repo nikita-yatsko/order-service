@@ -13,7 +13,7 @@ public class OrderUserClient {
     private final RestTemplate restTemplate;
 
     public OrderUserClient(RestTemplateBuilder builder,
-                           @Value("${auth.service.url}") String baseUrl) {
+                           @Value("${user.service.url}") String baseUrl) {
         this.restTemplate = builder.rootUri(baseUrl).build();
     }
 

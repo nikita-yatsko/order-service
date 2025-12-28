@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,11 +26,14 @@ public class OrderController {
     private final OrderService orderService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrderResponse> getOrderById(@PathVariable Integer id) {
+    @PreAuthorize("@orderServiceImpl.isOwner(#id, principal.id) or hasRole('ADMIN')")
+    public ResponseEntity<OrderResponse> getOrderById(
+            @PathVariable Integer id) {
         return ResponseEntity.ok(orderService.getOrderById(id));
     }
 
     @GetMapping("/all")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Page<OrderResponse>> getAllOrders(
             @RequestParam(required = false) LocalDateTime from,
             @RequestParam(required = false) LocalDateTime to,
@@ -42,6 +46,7 @@ public class OrderController {
     }
 
     @GetMapping("/user/{id}")
+    @PreAuthorize("#id == principal.id or hasRole('ADMIN')")
     public ResponseEntity<List<OrderResponse>> getOrderByUserId(@PathVariable Integer id) {
         return ResponseEntity.ok(orderService.getOrdersByUserId(id));
     }
@@ -52,6 +57,7 @@ public class OrderController {
     }
 
     @PostMapping("/update/{id}")
+    @PreAuthorize("@orderServiceImpl.isOwner(#id, principal.id) or hasRole('ADMIN')")
     public ResponseEntity<OrderResponse> updateOrder(
             @PathVariable("id") Integer id,
             @RequestBody @Valid OrderRequest orderRequest) {
@@ -59,6 +65,7 @@ public class OrderController {
     }
 
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("@orderServiceImpl.isOwner(#id, principal.id) or hasRole('ADMIN')")
     public ResponseEntity<Void> deleteOrder(@PathVariable Integer id) {
         orderService.deleteOrderById(id);
         return ResponseEntity.noContent().build();

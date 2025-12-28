@@ -6,6 +6,7 @@ import com.order.service.order_service.model.constants.ErrorMessage;
 import com.order.service.order_service.model.dto.UserInfo;
 import com.order.service.order_service.model.entity.Order;
 import com.order.service.order_service.model.entity.OrderItem;
+import com.order.service.order_service.model.exception.InvalidDataException;
 import com.order.service.order_service.model.exception.NotFoundException;
 import com.order.service.order_service.model.request.OrderRequest;
 import com.order.service.order_service.model.response.OrderResponse;
@@ -87,6 +88,15 @@ public class OrderServiceImpl implements OrderService {
         orderMapper.updateOrder(orderRequest, order);
 
         return orderResponseMapper.toOrderResponse(userCacheService.getUserInfo(EMAIL), orderMapper.toOrderDto(order));
+    }
+
+    @Override
+    public Boolean isOwner(Integer orderId, Integer userId) {
+        if (orderId == null || userId == null)
+            throw new InvalidDataException(ErrorMessage.INVALID_ORDER_ID_OR_USER_ID.getMessage(orderId, userId));
+        return orderRepository.findOrderById(orderId)
+                .map(od -> od.getUserId().equals(userId))
+                .orElse(false);
     }
 
     @Override

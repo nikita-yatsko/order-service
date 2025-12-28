@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -47,6 +48,7 @@ public class ItemControllerTest extends BaseIntegrationTest{
     }
 
     @Test
+    @WithMockUser(username = "test", roles = {"ADMIN"})
     public void getAllItemsReturn200Ok() throws Exception {
         // Given:
         Item savedItem = item;
@@ -65,6 +67,7 @@ public class ItemControllerTest extends BaseIntegrationTest{
     }
 
     @Test
+    @WithMockUser(username = "test", roles = {"ADMIN"})
     public void getItemByIdReturn20Ook() throws Exception {
         // Given
         Integer id = item.getId();
@@ -83,6 +86,7 @@ public class ItemControllerTest extends BaseIntegrationTest{
     }
 
     @Test
+    @WithMockUser(username = "test", roles = {"ADMIN"})
     public void getItemByIdReturn404NotFound() throws Exception {
         // Given:
         Integer id = 999;
@@ -97,6 +101,7 @@ public class ItemControllerTest extends BaseIntegrationTest{
     }
 
     @Test
+    @WithMockUser(username = "test", roles = {"ADMIN"})
     public void addItemReturn201Created() throws Exception {
         // Given:
         Item newItem = new Item();
@@ -117,6 +122,7 @@ public class ItemControllerTest extends BaseIntegrationTest{
     }
 
     @Test
+    @WithMockUser(username = "test", roles = {"ADMIN"})
     public void addItemReturn409Conflict() throws Exception {
         // Given:
         Item newItem = new Item();
@@ -135,6 +141,7 @@ public class ItemControllerTest extends BaseIntegrationTest{
     }
 
     @Test
+    @WithMockUser(username = "test", roles = {"ADMIN"})
     public void updateItemReturn200Ok() throws Exception {
         // Given:
         Integer id = item.getId();
@@ -156,6 +163,7 @@ public class ItemControllerTest extends BaseIntegrationTest{
     }
 
     @Test
+    @WithMockUser(username = "test", roles = {"ADMIN"})
     public void updateItemReturn404NotFound() throws Exception {
         // Given:
         Integer id = 999;
@@ -175,6 +183,7 @@ public class ItemControllerTest extends BaseIntegrationTest{
     }
 
     @Test
+    @WithMockUser(username = "test", roles = {"ADMIN"})
     public void updateItemReturn409DataExist() throws Exception {
         // Given:
         Integer id = item.getId();
@@ -199,6 +208,7 @@ public class ItemControllerTest extends BaseIntegrationTest{
     }
 
     @Test
+    @WithMockUser(username = "test", roles = {"ADMIN"})
     public void deleteItemReturn204NoContent() throws Exception {
         // Given:
         Integer id = item.getId();
@@ -207,11 +217,13 @@ public class ItemControllerTest extends BaseIntegrationTest{
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders
                 .delete("/api/item/delete/{id}", id));
 
+
         // Then:
         result.andExpect(MockMvcResultMatchers.status().isNoContent());
     }
 
     @Test
+    @WithMockUser(username = "test", roles = {"ADMIN"})
     public void deleteItemReturn404NotFound() throws Exception {
         // Given:
         Integer id = 999;
