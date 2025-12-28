@@ -5,6 +5,7 @@ import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 @Service
 public class OrderUserClient {
@@ -17,12 +18,11 @@ public class OrderUserClient {
     }
 
     @CircuitBreaker(name = "userServiceBreaker", fallbackMethod = "fallback")
-    public UserInfo getUserByEmail(String email) {
+    public Mono<UserInfo> getUserByEmail(String email) {
         return webClient.get()
                 .uri("/api/user/info/{email}", email)
                 .retrieve()
-                .bodyToMono(UserInfo.class)
-                .block();
+                .bodyToMono(UserInfo.class);
     }
 
     public UserInfo fallback(String email, Throwable ex) {
