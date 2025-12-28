@@ -14,7 +14,6 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.reactive.function.client.WebClientRequestException;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -31,13 +30,6 @@ public class CommonControllerAdvice {
         NotFoundException nfe = (ex instanceof NotFoundException) ? (NotFoundException) ex
                 : new NotFoundException(ex.getMessage());
         return buildErrorResponse(nfe, HttpStatus.NOT_FOUND, request);
-    }
-
-    @ExceptionHandler(WebClientRequestException.class)
-    public ResponseEntity<ErrorResponse> handleWebClientRequestExceptionException(WebClientRequestException e, HttpServletRequest request) {
-        log.error(e.getMessage());
-
-        return buildErrorResponse(e, HttpStatus.SERVICE_UNAVAILABLE, request);
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
