@@ -103,13 +103,16 @@ public class OrderControllerTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void getOrderById_200_ok() throws Exception {
+    public void getOrderByIdReturn200Ok() throws Exception {
         // Given:
         Integer id = order.getId();
 
         // When:
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders
                 .get("/api/order/{id}", id)
+                .header("X-Is-Valid", "true")
+                .header("X-User-Id", "1")
+                .header("X-Role", "ADMIN")
                 .accept(MediaType.APPLICATION_JSON));
 
         // Then:
@@ -124,13 +127,16 @@ public class OrderControllerTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void getOrderById_404_notFound() throws Exception {
+    public void getOrderByIdReturn404NotFound() throws Exception {
         // Given:
         Integer id = 999;
 
         // When:
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders
                 .get("/api/order/{id}", id)
+                .header("X-Is-Valid", "true")
+                .header("X-User-Id", "1")
+                .header("X-Role", "ADMIN")
                 .accept(MediaType.APPLICATION_JSON));
 
         // Then:
@@ -138,10 +144,13 @@ public class OrderControllerTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void getAllOrders_200_ok() throws Exception {
+    public void getAllOrdersReturn200Ok() throws Exception {
         // When:
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders
                 .get("/api/order/all")
+                .header("X-Is-Valid", "true")
+                .header("X-User-Id", "1")
+                .header("X-Role", "ADMIN")
                 .accept(MediaType.APPLICATION_JSON));
 
         // Then:
@@ -150,13 +159,16 @@ public class OrderControllerTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void getOrderByUserId_200_ok() throws Exception {
+    public void getOrderByUserIdReturn200Ok() throws Exception {
         // Given:
         Integer id = order.getUserId();
 
         // When:
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders
                 .get("/api/order/user/{id}", id)
+                .header("X-Is-Valid", "true")
+                .header("X-User-Id", "1")
+                .header("X-Role", "ADMIN")
                 .accept(MediaType.APPLICATION_JSON));
 
         // Then:
@@ -170,7 +182,7 @@ public class OrderControllerTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void createOrder_201_created() throws Exception {
+    public void createOrderReturn201Created() throws Exception {
         // Given:
         ItemDto itemDto = new ItemDto();
         itemDto.setId(item.getId());
@@ -182,7 +194,7 @@ public class OrderControllerTest extends BaseIntegrationTest {
         requestItemDto.setQuantity(2);
 
         OrderRequest orderRequest = new OrderRequest();
-        orderRequest.setUserId(1); // новый заказ для теста
+        orderRequest.setUserId(1);
         orderRequest.setStatus(Status.CREATED);
         orderRequest.setItems(List.of(requestItemDto));
         orderRequest.setTotalPrice(item.getPrice() * orderItemDto.getQuantity());
@@ -190,6 +202,9 @@ public class OrderControllerTest extends BaseIntegrationTest {
         // When:
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders
                 .post("/api/order/create")
+                .header("X-Is-Valid", "true")
+                .header("X-User-Id", "1")
+                .header("X-Role", "ADMIN")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(orderRequest)));
@@ -205,13 +220,16 @@ public class OrderControllerTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void deleteOrder_204_noContent() throws Exception {
+    public void deleteOrderReturn204NoContent() throws Exception {
         // Given:
         Integer id = order.getId();
 
         // When:
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders
-                .delete("/api/order/delete/{id}", id));
+                .delete("/api/order/delete/{id}", id)
+                .header("X-Is-Valid", "true")
+                .header("X-User-Id", "1")
+                .header("X-Role", "ADMIN"));
 
         // Then:
         result.andExpect(MockMvcResultMatchers.status().isNoContent());
@@ -219,13 +237,16 @@ public class OrderControllerTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void deleteOrder_404_notFound() throws Exception {
+    public void deleteOrderReturn404NotFound() throws Exception {
         // Given:
         Integer id = 999;
 
         // When:
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders
-                .delete("/api/order/delete/{id}", id));
+                .delete("/api/order/delete/{id}", id)
+                .header("X-Is-Valid", "true")
+                .header("X-User-Id", "1")
+                .header("X-Role", "ADMIN"));
 
         // Then:
         result.andExpect(MockMvcResultMatchers.status().isNotFound());

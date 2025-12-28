@@ -47,13 +47,16 @@ public class ItemControllerTest extends BaseIntegrationTest{
     }
 
     @Test
-    public void getAllItems_200_ok() throws Exception {
+    public void getAllItemsReturn200Ok() throws Exception {
         // Given:
         Item savedItem = item;
 
         //When:
         ResultActions response = mockMvc.perform(MockMvcRequestBuilders
                 .get("/api/item/all")
+                .header("X-Is-Valid", "true")
+                .header("X-User-Id", "1")
+                .header("X-Role", "ADMIN")
                 .accept(MediaType.APPLICATION_JSON)
         );
 
@@ -65,13 +68,16 @@ public class ItemControllerTest extends BaseIntegrationTest{
     }
 
     @Test
-    public void getItemById_200_ok() throws Exception {
+    public void getItemByIdReturn20Ook() throws Exception {
         // Given
         Integer id = item.getId();
 
         // When:
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders
                 .get("/api/item/{id}", id)
+                .header("X-Is-Valid", "true")
+                .header("X-User-Id", "1")
+                .header("X-Role", "ADMIN")
                 .accept(MediaType.APPLICATION_JSON));
 
         // Then:
@@ -83,13 +89,16 @@ public class ItemControllerTest extends BaseIntegrationTest{
     }
 
     @Test
-    public void getItemById_404_notFound() throws Exception {
+    public void getItemByIdReturn404NotFound() throws Exception {
         // Given:
         Integer id = 999;
 
         // When:
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders
                 .get("/api/item/{id}", id)
+                .header("X-Is-Valid", "true")
+                .header("X-User-Id", "1")
+                .header("X-Role", "ADMIN")
                 .accept(MediaType.APPLICATION_JSON));
 
         // Then:
@@ -97,7 +106,7 @@ public class ItemControllerTest extends BaseIntegrationTest{
     }
 
     @Test
-    public void addItem_201_created() throws Exception {
+    public void addItemReturn201Created() throws Exception {
         // Given:
         Item newItem = new Item();
         newItem.setName("New item");
@@ -106,6 +115,9 @@ public class ItemControllerTest extends BaseIntegrationTest{
         // When:
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders
                 .post("/api/item/add")
+                .header("X-Is-Valid", "true")
+                .header("X-User-Id", "1")
+                .header("X-Role", "ADMIN")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(newItem)));
@@ -117,7 +129,7 @@ public class ItemControllerTest extends BaseIntegrationTest{
     }
 
     @Test
-    public void addItem_409_conflict() throws Exception {
+    public void addItemReturn409Conflict() throws Exception {
         // Given:
         Item newItem = new Item();
         newItem.setName("test");
@@ -126,6 +138,9 @@ public class ItemControllerTest extends BaseIntegrationTest{
         // When:
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders
                 .post("/api/item/add")
+                .header("X-Is-Valid", "true")
+                .header("X-User-Id", "1")
+                .header("X-Role", "ADMIN")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(newItem)));
@@ -135,7 +150,7 @@ public class ItemControllerTest extends BaseIntegrationTest{
     }
 
     @Test
-    public void updateItem_200_ok() throws Exception {
+    public void updateItemReturn200Ok() throws Exception {
         // Given:
         Integer id = item.getId();
         ItemRequest request = new ItemRequest();
@@ -145,6 +160,9 @@ public class ItemControllerTest extends BaseIntegrationTest{
         // When:
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders
                 .post("/api/item/update/{id}", id)
+                .header("X-Is-Valid", "true")
+                .header("X-User-Id", "1")
+                .header("X-Role", "ADMIN")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)));
@@ -156,7 +174,7 @@ public class ItemControllerTest extends BaseIntegrationTest{
     }
 
     @Test
-    public void updateItem_404_notFound() throws Exception {
+    public void updateItemReturn404NotFound() throws Exception {
         // Given:
         Integer id = 999;
         ItemRequest request = new ItemRequest();
@@ -166,6 +184,9 @@ public class ItemControllerTest extends BaseIntegrationTest{
         // When:
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders
                 .post("/api/item/update/{id}", id)
+                .header("X-Is-Valid", "true")
+                .header("X-User-Id", "1")
+                .header("X-Role", "ADMIN")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)));
@@ -175,7 +196,7 @@ public class ItemControllerTest extends BaseIntegrationTest{
     }
 
     @Test
-    public void updateItem_409_dataExist() throws Exception {
+    public void updateItemReturn409DataExist() throws Exception {
         // Given:
         Integer id = item.getId();
         ItemRequest request = new ItemRequest();
@@ -190,6 +211,9 @@ public class ItemControllerTest extends BaseIntegrationTest{
         // When:
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders
                 .post("/api/item/update/{id}", id)
+                .header("X-Is-Valid", "true")
+                .header("X-User-Id", "1")
+                .header("X-Role", "ADMIN")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)));
@@ -199,26 +223,33 @@ public class ItemControllerTest extends BaseIntegrationTest{
     }
 
     @Test
-    public void deleteItem_204_noContent() throws Exception {
+    public void deleteItemReturn204NoContent() throws Exception {
         // Given:
         Integer id = item.getId();
 
         // When:
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders
-                .delete("/api/item/delete/{id}", id));
+                .delete("/api/item/delete/{id}", id)
+                .header("X-Is-Valid", "true")
+                .header("X-User-Id", "1")
+                .header("X-Role", "ADMIN"));
+
 
         // Then:
         result.andExpect(MockMvcResultMatchers.status().isNoContent());
     }
 
     @Test
-    public void deleteItem_404_notFound() throws Exception {
+    public void deleteItemReturn404NotFound() throws Exception {
         // Given:
         Integer id = 999;
 
         // When:
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders
-                .delete("/api/item/delete/{id}", id));
+                .delete("/api/item/delete/{id}", id)
+                .header("X-Is-Valid", "true")
+                .header("X-User-Id", "1")
+                .header("X-Role", "ADMIN"));
 
         // Then:
         result.andExpect(MockMvcResultMatchers.status().isNotFound());
