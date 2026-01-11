@@ -20,5 +20,7 @@ public interface OrderService {
 
     OrderResponse updateOrderById(Integer id, OrderRequest orderRequest);
 
+    Boolean isOwner(Integer orderId, Integer userId);
+
     void deleteOrderById(Integer id);
 }

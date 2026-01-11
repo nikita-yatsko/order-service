@@ -12,6 +12,7 @@ public enum ErrorMessage {
     ITEM_ALREADY_EXISTS("Item with name: %s already exists"),
 
     ORDER_NOT_FOUND_BY_ID("Order with ID: %s was not found"),
+    INVALID_ORDER_ID_OR_USER_ID("Invalid order ID: %s or user ID: %s"),
     ;
 
     private final String message;
