@@ -33,9 +33,20 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 8082
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://postgres:5432/practical_course?currentSchema=order_service"
+            - name: SPRING_DATA_REDIS_HOST
+              value: "redis"
+            - name: JAVA_OPTS
+              value: "-XX:+UseContainerSupport -Xmx512m -Xms256m"
+            - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
+              value: "my-kafka-kafka-bootstrap.kafka.svc.cluster.local:9092"
+            - name : SPRING_EXTERNAL_KAFKA_SERVER
+              value: "my-kafka-kafka-bootstrap.kafka.svc.cluster.local:9092"
           readinessProbe:
             httpGet:
-              path: /actuator/health/readiness
+              path: /actuator/health
               port: 8082
             initialDelaySeconds: 60
             periodSeconds: 5
@@ -43,7 +54,7 @@ spec:
 
           livenessProbe:
             httpGet:
-              path: /actuator/health/liveness
+              path: /actuator/health
               port: 8082
             initialDelaySeconds: 80
             periodSeconds: 10
@@ -51,8 +62,8 @@ spec:
 
           resources:
             requests:
-              memory: "128Mi"
-              cpu: "100m"
-            limits:
               memory: "256Mi"
-              cpu: "250m"
+              cpu: "150m"
+            limits:
+              memory: "512Mi"
+              cpu: "300m"
