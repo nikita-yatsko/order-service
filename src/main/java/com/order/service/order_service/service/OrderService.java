@@ -22,5 +22,7 @@ public interface OrderService {
 
     Boolean isOwner(Integer orderId, Integer userId);
 
+    OrderResponse setPaidStatus(Integer orderId, Integer userId, String statusRequest);
+
     void deleteOrderById(Integer id);
 }
