@@ -110,7 +110,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void createOrder_success() {
+    public void createOrderSuccess() {
         // Arrange:
         when(orderMapper.createOrder(orderRequest)).thenReturn(order);
         when(orderRepository.save(order)).thenReturn(order);
@@ -140,7 +140,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void getOrderById_success() {
+    public void getOrderByIdSuccess() {
         // Arrange:
         when(orderRepository.findOrderById(1)).thenReturn(Optional.of(order));
         when(userCacheService.getUserInfo(anyString())).thenReturn(userInfo);
@@ -168,7 +168,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void getOrderById_throwError_NotFoundException() {
+    public void getOrderByIdThrowErrorNotFoundException() {
         // Arrange:
         when(orderRepository.findOrderById(1)).thenReturn(Optional.empty());
 
@@ -184,7 +184,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void getAllOrders_success() {
+    public void getAllOrdersSuccess() {
         // Arrange:
         Pageable pageable = PageRequest.of(0, 10, Sort.by("id").ascending());
 
@@ -214,7 +214,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void getAllOrdersByUserId_success() {
+    public void getAllOrdersByUserIdSuccess() {
         // Arrange:
         when(orderRepository.findAllOrdersByUserId(1)).thenReturn(List.of(order));
         when(userCacheService.getUserInfo(anyString())).thenReturn(userInfo);
@@ -239,7 +239,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void updateOrderById_success() {
+    public void updateOrderByIdSuccess() {
         // Arrange:
         orderRequest.setStatus(Status.IN_PROCESS);
         orderResponse.getOrderDto().setStatus(Status.IN_PROCESS);
@@ -270,7 +270,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void updateOrderById_throwError_notFoundException() {
+    public void updateOrderByIdThrowErrorNotFoundException() {
         // Arrange:
         when(orderRepository.findOrderById(1)).thenReturn(Optional.empty());
 
@@ -286,7 +286,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void deleteOrder_success() {
+    public void deleteOrderSuccess() {
         // Arrange:
         when(orderRepository.findOrderById(1)).thenReturn(Optional.of(order));
         doNothing().when(orderRepository).softDelete(1);
@@ -300,7 +300,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void deleteOrder_throwError_notFoundException() {
+    public void deleteOrderThrowErrorNotFoundException() {
         // Arrange
         when(orderRepository.findOrderById(1)).thenReturn(Optional.empty());
 

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -47,7 +48,8 @@ public class ItemControllerTest extends BaseIntegrationTest{
     }
 
     @Test
-    public void getAllItems_200_ok() throws Exception {
+    @WithMockUser(username = "test", roles = {"ADMIN"})
+    public void getAllItemsReturn200Ok() throws Exception {
         // Given:
         Item savedItem = item;
 
@@ -65,7 +67,8 @@ public class ItemControllerTest extends BaseIntegrationTest{
     }
 
     @Test
-    public void getItemById_200_ok() throws Exception {
+    @WithMockUser(username = "test", roles = {"ADMIN"})
+    public void getItemByIdReturn20Ook() throws Exception {
         // Given
         Integer id = item.getId();
 
@@ -83,7 +86,8 @@ public class ItemControllerTest extends BaseIntegrationTest{
     }
 
     @Test
-    public void getItemById_404_notFound() throws Exception {
+    @WithMockUser(username = "test", roles = {"ADMIN"})
+    public void getItemByIdReturn404NotFound() throws Exception {
         // Given:
         Integer id = 999;
 
@@ -97,7 +101,8 @@ public class ItemControllerTest extends BaseIntegrationTest{
     }
 
     @Test
-    public void addItem_201_created() throws Exception {
+    @WithMockUser(username = "test", roles = {"ADMIN"})
+    public void addItemReturn201Created() throws Exception {
         // Given:
         Item newItem = new Item();
         newItem.setName("New item");
@@ -117,7 +122,8 @@ public class ItemControllerTest extends BaseIntegrationTest{
     }
 
     @Test
-    public void addItem_409_conflict() throws Exception {
+    @WithMockUser(username = "test", roles = {"ADMIN"})
+    public void addItemReturn409Conflict() throws Exception {
         // Given:
         Item newItem = new Item();
         newItem.setName("test");
@@ -135,7 +141,8 @@ public class ItemControllerTest extends BaseIntegrationTest{
     }
 
     @Test
-    public void updateItem_200_ok() throws Exception {
+    @WithMockUser(username = "test", roles = {"ADMIN"})
+    public void updateItemReturn200Ok() throws Exception {
         // Given:
         Integer id = item.getId();
         ItemRequest request = new ItemRequest();
@@ -156,7 +163,8 @@ public class ItemControllerTest extends BaseIntegrationTest{
     }
 
     @Test
-    public void updateItem_404_notFound() throws Exception {
+    @WithMockUser(username = "test", roles = {"ADMIN"})
+    public void updateItemReturn404NotFound() throws Exception {
         // Given:
         Integer id = 999;
         ItemRequest request = new ItemRequest();
@@ -175,7 +183,8 @@ public class ItemControllerTest extends BaseIntegrationTest{
     }
 
     @Test
-    public void updateItem_409_dataExist() throws Exception {
+    @WithMockUser(username = "test", roles = {"ADMIN"})
+    public void updateItemReturn409DataExist() throws Exception {
         // Given:
         Integer id = item.getId();
         ItemRequest request = new ItemRequest();
@@ -199,7 +208,8 @@ public class ItemControllerTest extends BaseIntegrationTest{
     }
 
     @Test
-    public void deleteItem_204_noContent() throws Exception {
+    @WithMockUser(username = "test", roles = {"ADMIN"})
+    public void deleteItemReturn204NoContent() throws Exception {
         // Given:
         Integer id = item.getId();
 
@@ -207,12 +217,14 @@ public class ItemControllerTest extends BaseIntegrationTest{
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders
                 .delete("/api/item/delete/{id}", id));
 
+
         // Then:
         result.andExpect(MockMvcResultMatchers.status().isNoContent());
     }
 
     @Test
-    public void deleteItem_404_notFound() throws Exception {
+    @WithMockUser(username = "test", roles = {"ADMIN"})
+    public void deleteItemReturn404NotFound() throws Exception {
         // Given:
         Integer id = 999;
 
