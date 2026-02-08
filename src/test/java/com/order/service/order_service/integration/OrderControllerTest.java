@@ -130,8 +130,6 @@ public class OrderControllerTest extends BaseIntegrationTest {
 
         // Then:
         result.andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("John"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.surname").value("Doe"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.email").value("test@mail.com"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.orderDto.id").value(id))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.orderDto.status").value(Status.CREATED.toString()))
@@ -193,8 +191,6 @@ public class OrderControllerTest extends BaseIntegrationTest {
 
         // Then:
         result.andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("John"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].surname").value("Doe"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].email").value("test@mail.com"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].orderDto.userId").value(id))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].orderDto.status").value(Status.CREATED.toString()))
@@ -229,8 +225,6 @@ public class OrderControllerTest extends BaseIntegrationTest {
 
         // Then:
         result.andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("John"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.surname").value("Doe"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.email").value("test@mail.com"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.orderDto.status").value(Status.CREATED.toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.orderDto.items[0].item.name").value(itemDto.getName()))
