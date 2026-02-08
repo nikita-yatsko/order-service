@@ -3,6 +3,11 @@ apiVersion: v1
 kind: Service
 metadata:
   name: order-service
+  namespace: default
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/path: "/actuator/prometheus"
+    prometheus.io/port: "8082"
 spec:
   type: ClusterIP
   selector:
@@ -44,21 +49,29 @@ spec:
               value: "my-kafka-kafka-bootstrap.kafka.svc.cluster.local:9092"
             - name : SPRING_EXTERNAL_KAFKA_SERVER
               value: "my-kafka-kafka-bootstrap.kafka.svc.cluster.local:9092"
+            - name: MANAGEMENT_OTLP_TRACING_ENDPOINT
+              value: "http://tempo.monitoring.svc.cluster.local:4318/v1/traces"
+
+          startupProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8082
+            failureThreshold: 30
+            periodSeconds: 10
+
           readinessProbe:
             httpGet:
               path: /actuator/health
               port: 8082
-            initialDelaySeconds: 60
+            initialDelaySeconds: 5
             periodSeconds: 5
-            timeoutSeconds: 2
 
           livenessProbe:
             httpGet:
               path: /actuator/health
               port: 8082
-            initialDelaySeconds: 80
-            periodSeconds: 10
-            timeoutSeconds: 2
+            initialDelaySeconds: 10
+            periodSeconds: 20
 
           resources:
             requests:

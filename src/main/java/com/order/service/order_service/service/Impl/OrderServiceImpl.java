@@ -90,6 +90,11 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.ORDER_NOT_FOUND_BY_ID.getMessage(id)));
         orderMapper.updateOrder(orderRequest, order);
 
+        if (order.getOrderItems() != null)
+            order.getOrderItems().forEach(item -> item.setOrder(order));
+            
+        orderRepository.save(order);
+
         return orderResponseMapper.toOrderResponse(userCacheService.getUserInfo(EMAIL), orderMapper.toOrderDto(order));
     }
 
