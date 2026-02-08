@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import java.net.URI;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
 public class OrderUserClient {
@@ -19,7 +21,12 @@ public class OrderUserClient {
 
     @CircuitBreaker(name = "userServiceBreaker", fallbackMethod = "fallback")
     public UserInfo getUserByEmail(String email) {
-        return restTemplate.getForObject("/api/user/info/{email}", UserInfo.class, email);
+        URI uri = UriComponentsBuilder.fromPath("/api/user/info/{email}") 
+            .buildAndExpand(email) 
+            .encode() 
+            .toUri(); 
+
+        return restTemplate.getForObject(uri, UserInfo.class);
     }
 
     public UserInfo fallback(String email, Throwable ex) {

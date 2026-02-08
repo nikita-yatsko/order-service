@@ -7,6 +7,7 @@ import com.order.service.order_service.model.request.OrderRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.AfterMapping;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(
@@ -33,4 +34,10 @@ public interface OrderMapper {
     void updateOrder(OrderRequest orderRequest, @MappingTarget Order order);
 
     Order toOrder(OrderDto orderDto);
+
+    @AfterMapping default void linkOrderItems(@MappingTarget Order order) { 
+    if (order.getOrderItems() != null) { 
+        order.getOrderItems().forEach(item -> item.setOrder(order));
+    }
+}
 }

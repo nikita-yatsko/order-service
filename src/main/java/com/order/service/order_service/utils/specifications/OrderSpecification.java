@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 public class OrderSpecification {
 
-    private final static String CREATED_AT = "created_at";
+    private final static String CREATED_AT = "createdAt";
 
     public static Specification<Order> dateBetween(LocalDateTime from, LocalDateTime to) {
         return (root, query, cb) -> {
