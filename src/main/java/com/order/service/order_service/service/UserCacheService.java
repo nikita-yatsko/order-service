@@ -4,5 +4,5 @@ import com.order.service.order_service.model.dto.UserInfo;
 
 public interface UserCacheService {
 
-    UserInfo getUserInfo(String email);
+    UserInfo getUserInfo(Integer userId);
 }

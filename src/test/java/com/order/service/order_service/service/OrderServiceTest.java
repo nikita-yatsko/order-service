@@ -114,7 +114,7 @@ public class OrderServiceTest {
         // Arrange:
         when(orderMapper.createOrder(orderRequest)).thenReturn(order);
         when(orderRepository.save(order)).thenReturn(order);
-        when(userCacheService.getUserInfo(anyString())).thenReturn(userInfo);
+        when(userCacheService.getUserInfo(anyInt())).thenReturn(userInfo);
         when(orderMapper.toOrderDto(order)).thenReturn(orderDto);
         when(orderResponseMapper.toOrderResponse(userInfo, orderDto)).thenReturn(orderResponse);
 
@@ -134,7 +134,7 @@ public class OrderServiceTest {
         // Verify:
         verify(orderMapper, times(1)).createOrder(orderRequest);
         verify(orderRepository, times(1)).save(order);
-        verify(userCacheService, times(1)).getUserInfo(anyString());
+        verify(userCacheService, times(1)).getUserInfo(anyInt());
         verify(orderMapper, times(1)).toOrderDto(order);
         verify(orderResponseMapper, times(1)).toOrderResponse(userInfo, orderDto);
     }
@@ -143,7 +143,7 @@ public class OrderServiceTest {
     public void getOrderByIdSuccess() {
         // Arrange:
         when(orderRepository.findOrderById(1)).thenReturn(Optional.of(order));
-        when(userCacheService.getUserInfo(anyString())).thenReturn(userInfo);
+        when(userCacheService.getUserInfo(anyInt())).thenReturn(userInfo);
         when(orderMapper.toOrderDto(order)).thenReturn(orderDto);
         when(orderResponseMapper.toOrderResponse(userInfo, orderDto)).thenReturn(orderResponse);
 
@@ -162,7 +162,7 @@ public class OrderServiceTest {
 
         // Verify:
         verify(orderRepository, times(1)).findOrderById(1);
-        verify(userCacheService, times(1)).getUserInfo(anyString());
+        verify(userCacheService, times(1)).getUserInfo(anyInt());
         verify(orderMapper, times(1)).toOrderDto(order);
         verify(orderResponseMapper, times(1)).toOrderResponse(userInfo, orderDto);
     }
@@ -191,7 +191,7 @@ public class OrderServiceTest {
         Page<Order> page = new PageImpl<>(List.of(order), pageable, 1);
 
         when(orderRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(page);
-        when(userCacheService.getUserInfo(anyString())).thenReturn(userInfo);
+        when(userCacheService.getUserInfo(anyInt())).thenReturn(userInfo);
         when(orderMapper.toOrderDto(order)).thenReturn(orderDto);
         when(orderResponseMapper.toOrderResponse(userInfo, orderDto)).thenReturn(orderResponse);
 
@@ -208,7 +208,7 @@ public class OrderServiceTest {
 
         // Verify:
         verify(orderRepository, times(1)).findAll(any(Specification.class), any(Pageable.class));
-        verify(userCacheService, times(1)).getUserInfo(anyString());
+        verify(userCacheService, times(1)).getUserInfo(anyInt());
         verify(orderMapper, times(1)).toOrderDto(order);
         verify(orderResponseMapper, times(1)).toOrderResponse(userInfo, orderDto);
     }
@@ -217,7 +217,7 @@ public class OrderServiceTest {
     public void getAllOrdersByUserIdSuccess() {
         // Arrange:
         when(orderRepository.findAllOrdersByUserId(1)).thenReturn(List.of(order));
-        when(userCacheService.getUserInfo(anyString())).thenReturn(userInfo);
+        when(userCacheService.getUserInfo(anyInt())).thenReturn(userInfo);
         when(orderMapper.toOrderDto(order)).thenReturn(orderDto);
         when(orderResponseMapper.toOrderResponse(userInfo, orderDto)).thenReturn(orderResponse);
 
@@ -234,7 +234,7 @@ public class OrderServiceTest {
 
         // Verify:
         verify(orderRepository, times(1)).findAllOrdersByUserId(1);
-        verify(userCacheService, times(1)).getUserInfo(anyString());
+        verify(userCacheService, times(1)).getUserInfo(anyInt());
         verify(orderMapper, times(1)).toOrderDto(order);
     }
 
@@ -246,7 +246,7 @@ public class OrderServiceTest {
 
         when(orderRepository.findOrderById(1)).thenReturn(Optional.of(order));
         doNothing().when(orderMapper).updateOrder(orderRequest, order);
-        when(userCacheService.getUserInfo(anyString())).thenReturn(userInfo);
+        when(userCacheService.getUserInfo(anyInt())).thenReturn(userInfo);
         when(orderMapper.toOrderDto(order)).thenReturn(orderDto);
         when(orderResponseMapper.toOrderResponse(userInfo, orderDto)).thenReturn(orderResponse);
 
@@ -264,7 +264,7 @@ public class OrderServiceTest {
 
         // Verify:
         verify(orderRepository, times(1)).findOrderById(1);
-        verify(userCacheService, times(1)).getUserInfo(anyString());
+        verify(userCacheService, times(1)).getUserInfo(anyInt());
         verify(orderMapper, times(1)).updateOrder(orderRequest, order);
         verify(orderResponseMapper, times(1)).toOrderResponse(userInfo, orderDto);
     }
