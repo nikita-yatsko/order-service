@@ -37,8 +37,6 @@ public class OrderServiceImpl implements OrderService {
     private final OrderResponseMapper orderResponseMapper;
     private final UserCacheService userCacheService;
 
-    private final static String EMAIL = "admin@example.com";
-
     @Override
     @Transactional
     public OrderResponse createOrder(OrderRequest orderRequest) {
@@ -53,14 +51,14 @@ public class OrderServiceImpl implements OrderService {
             item.setOrder(order);
 
         Order newOrder = orderRepository.save(order);
-        UserInfo userInfo = userCacheService.getUserInfo(EMAIL);
+        UserInfo userInfo = userCacheService.getUserInfo(orderRequest.getUserId());
         return orderResponseMapper.toOrderResponse(userInfo, orderMapper.toOrderDto(newOrder));
     }
 
     @Override
     public OrderResponse getOrderById(Integer id) {
         return orderRepository.findOrderById(id)
-                .map(order -> orderResponseMapper.toOrderResponse(userCacheService.getUserInfo(EMAIL), orderMapper.toOrderDto(order)))
+                .map(order -> orderResponseMapper.toOrderResponse(userCacheService.getUserInfo(order.getUserId()), orderMapper.toOrderDto(order)))
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.ORDER_NOT_FOUND_BY_ID.getMessage(id)));
     }
 
@@ -72,14 +70,14 @@ public class OrderServiceImpl implements OrderService {
 
         Page<Order> orders = orderRepository.findAll(specification, pageable);
 
-        return orders.map(order -> orderResponseMapper.toOrderResponse(userCacheService.getUserInfo(EMAIL), orderMapper.toOrderDto(order)));
+        return orders.map(order -> orderResponseMapper.toOrderResponse(userCacheService.getUserInfo(order.getUserId()), orderMapper.toOrderDto(order)));
     }
 
     @Override
     public List<OrderResponse> getOrdersByUserId(Integer userId) {
         return orderRepository.findAllOrdersByUserId(userId)
                 .stream()
-                .map(order -> orderResponseMapper.toOrderResponse(userCacheService.getUserInfo(EMAIL), orderMapper.toOrderDto(order)))
+                .map(order -> orderResponseMapper.toOrderResponse(userCacheService.getUserInfo(userId), orderMapper.toOrderDto(order)))
                 .toList();
     }
 
@@ -95,7 +93,7 @@ public class OrderServiceImpl implements OrderService {
             
         orderRepository.save(order);
 
-        return orderResponseMapper.toOrderResponse(userCacheService.getUserInfo(EMAIL), orderMapper.toOrderDto(order));
+        return orderResponseMapper.toOrderResponse(userCacheService.getUserInfo(order.getUserId()), orderMapper.toOrderDto(order));
     }
 
     @Override
@@ -130,7 +128,7 @@ public class OrderServiceImpl implements OrderService {
         Order changedOrder = orderRepository.save(order);
 
         return orderResponseMapper.toOrderResponse(
-                userCacheService.getUserInfo(EMAIL),
+                userCacheService.getUserInfo(order.getUserId()),
                 orderMapper.toOrderDto(changedOrder)
         );
     }
